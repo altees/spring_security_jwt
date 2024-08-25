@@ -6,6 +6,7 @@ import com.user.mangment.repositories.RoleRepository;
 import com.user.mangment.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,9 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
+
+
 
     @Autowired
     private UserRepository userRepository;
@@ -22,7 +25,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private RoleRepository roleRepository;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 
     @Override
@@ -32,6 +35,12 @@ public class UserServiceImpl implements UserService{
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllUser() {
+        List<User> allUsers = userRepository.findAll();
+        return allUsers;
     }
 
     private List<String> getRoleName(User user) {

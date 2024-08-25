@@ -11,19 +11,20 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/token")
+@CrossOrigin(origins = {"http://192.168.137.1:3000", "http://localhost:3000"})
 public class JWTController {
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Autowired
     private JWTUtil jwtUtil;
 

@@ -28,11 +28,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors();
         http.csrf().disable().
                 authorizeRequests().
-                antMatchers("/all", "/user/test", "/user/create","/token/generate").
+                antMatchers("/all", "/user/test", "/user/create", "/token/generate").
                 permitAll().
-                antMatchers("/user/admin").
+                antMatchers("/user/admin", "/user/allusers").
                 hasAuthority("ADMIN").
                 antMatchers("/user/tester").
                 hasAnyAuthority("ADMIN", "TESTER").
@@ -43,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 and().
                 sessionManagement().
                 sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 

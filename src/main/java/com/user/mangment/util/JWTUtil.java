@@ -20,13 +20,13 @@ public class JWTUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    @Value("${jwt.secret}")
-    private String secret;
-
     //retrieve username from jwt token
+
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
+    @Value("${jwt.secret}")
+    private String secret;
 
     //retrieve expiration date from jwt token
     public Date getExpirationDateFromToken(String token) {
