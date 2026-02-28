@@ -18,13 +18,14 @@ public class JWTUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60;
 
     //retrieve username from jwt token
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -40,7 +41,8 @@ public class JWTUtil implements Serializable {
 
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+
     }
 
     //check if the token has expired
@@ -52,6 +54,9 @@ public class JWTUtil implements Serializable {
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        userDetails.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .forEach(authority->claims.put("Role",authority));
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -63,13 +68,16 @@ public class JWTUtil implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY ))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        if (isTokenExpired(token)) {
+            throw new RuntimeException("expired token");
+        }
+        return (username.equals(userDetails.getUsername()));
     }
 }

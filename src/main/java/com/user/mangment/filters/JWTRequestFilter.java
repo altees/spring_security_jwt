@@ -1,6 +1,7 @@
 package com.user.mangment.filters;
 
 import com.user.mangment.util.JWTUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,8 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                         setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
 
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }else{
+                throw new RuntimeException("invalid or expired token");
             }
         }
 

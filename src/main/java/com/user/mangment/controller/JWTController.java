@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/token")
-@CrossOrigin(origins = {"http://192.168.137.1:3000", "http://localhost:3000"})
 public class JWTController {
 
 
@@ -44,7 +43,7 @@ public class JWTController {
         } catch (DisabledException e) {
             throw new Exception("User desabled");
         } catch (BadCredentialsException e) {
-            throw new Exception("Invalid Credentials");
+            throw new BadCredentialsException("Invalid Credentials");
         }
     }
 }
