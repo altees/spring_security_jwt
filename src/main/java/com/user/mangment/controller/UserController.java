@@ -19,7 +19,7 @@ public class UserController {
     @GetMapping("/test")
     @RolesAllowed("ADMIN")
     public String userTest() {
-        return "Hello User..";
+        return "Hello jenkins kya haal User..";
     }
 
     @PostMapping("/create")
